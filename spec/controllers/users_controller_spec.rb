@@ -34,12 +34,38 @@ describe UsersController do
       response.should have_selector("h1>img", :class => 'gravatar')
     end
 
-    it "should show the user's microposts" do
-      mp1 = Factory(:micropost, :user => @user, :content => 'Foo bar')
-      mp2 = Factory(:micropost, :user => @user, :content => 'Baz quux')
-      get :show, :id => @user
-      response.should have_selector('span.content', :content => mp1.content)
-      response.should have_selector('span.content', :content => mp2.content)
+    describe "micropost tests" do
+      before(:each) do
+        @mp1 = Factory(:micropost, :user => @user, :content => 'Foo bar')
+        @mp2 = Factory(:micropost, :user => @user, :content => 'Baz quux')
+      end
+
+      it "should show the user's microposts" do
+        get :show, :id => @user
+        response.should have_selector('span.content', :content => @mp1.content)
+        response.should have_selector('span.content', :content => @mp2.content)
+      end
+
+      it "should not show the delete link for non-signed-in users" do
+        get :show, :id => @user
+        response.should_not have_selector("a",	:"data-mode" => 'delete',
+						:content => 'delete')
+      end
+
+      it "should not show the delete link for another user" do
+        test_sign_in(Factory(:user, :email => Factory.next(:email)))
+        get :show, :id => @user
+        response.should_not have_selector("a",	:"data-method" => 'delete',
+						:content => 'delete')
+      end
+
+      it "should show the delete link for the correct user" do
+        test_sign_in(@user)
+        get :show, :id => @user
+        response.should have_selector("a",	:"data-method" => 'delete',
+						:content => 'delete')
+        
+      end
     end
   end
 
@@ -66,12 +92,14 @@ describe UsersController do
 
     it "should have a password field" do
       get :new
-      response.should have_selector("input[name='user[password]'] [type='password']")
+      response.should have_selector("input[name='user[password]']\
+ [type='password']")
     end
 
     it "should have a confirmation field" do
       get :new
-      response.should have_selector("input[name='user[password_confirmation]'] [type='password']")
+      response.should have_selector("input[name='user[password_confirmation]']\
+ [type='password']")
     end
   end
 
