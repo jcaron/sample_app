@@ -44,4 +44,20 @@ describe Relationship do
       @relationship.should_not be_valid
     end
   end
+
+  describe "dependancy" do
+    before(:each) do
+      @relationship.save
+    end
+
+    it "should destroy a relationship if the follower is destroyed" do
+      @follower.destroy
+      Relationship.find_by_id(@relationship.id).should be_nil
+    end
+
+    it "should destroy a relationship if the followed is destroyed" do
+      @followed.destroy
+      Relationship.find_by_id(@relationship.id).should be_nil
+    end
+  end
 end
