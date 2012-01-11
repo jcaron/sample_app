@@ -3,10 +3,9 @@
   <div class="field">
     <%= f.text_area :content, :id => "mpfield" %>
   </div>
-  <div id="char_count">140 characters remaining</div>
+  <div id="char_count">140 characters left</div>
   <script type="text/javascript">
     // just a function to pluralize the word "character" based on the number
-        $("#char_count").text(pluralize_characters(left) + " left");
     function pluralize_characters(num) {
       if(num == 1) {
         return num + " character";
