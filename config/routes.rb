@@ -11,6 +11,7 @@ SampleApp::Application.routes.draw do
   resources :relationships,	:only => [:create, :destroy]
 
   match '/signup', :to => 'users#new'
+  match '/users/:id/change_password', :to => 'users#change_password'
   match '/signin', :to => 'sessions#new'
   match '/signout', :to =>'sessions#destroy'
 

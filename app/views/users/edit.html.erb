@@ -1,7 +1,19 @@
 <h1>Edit user</h1>
 
 <%= form_for(@user) do |f| %>
-  <%= render 'fields', :f => f %>
+  <%= render 'shared/error_messages', :object => f.object %>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br>
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :password %><br>
+    <%= f.password_field :old_password %>
+  </div>
   <div class="actions">
     <%= f.submit "Update" %>
   </div>
@@ -11,3 +23,5 @@
   <%= gravatar_for @user %>
   <%= link_to "change", "http://gravatar.com/emails", :target => '_blank' %>
 </div>
+
+<%= link_to "Change password", "/users/#{params[:id]}/change_password" %>

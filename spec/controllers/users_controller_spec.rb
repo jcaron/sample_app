@@ -204,7 +204,7 @@ describe UsersController do
     describe "success" do
       before(:each) do
         @attr = { :name => "New Name", :email => "user@example.org", 
-                  :password => "barbaz", :password_confirmation => "barbaz" }
+                  :old_password => 'foobar' }
       end
 
       it "should change the user's attributes" do

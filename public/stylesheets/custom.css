@@ -247,3 +247,8 @@ form.new_micropost textarea {
 	height: 4em;
 	margin-bottom: 0;
 }
+
+#char_count {
+	font-size: 80%;
+	color: grey;
+}

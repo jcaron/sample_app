@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
-  before_filter :authenticate, :except => [:show, :new, :create]
-  before_filter :correct_user, :only => [:edit, :update]
+  before_filter :authenticate, :except => [:show, :new, :create, 
+	:change_password]
+  before_filter :correct_user, :only => [:edit, :update, :change_password]
   before_filter :admin_user, :only => [:destroy]
 
   def show
@@ -42,7 +43,15 @@ class UsersController < ApplicationController
 
   def update
     @user = User.find(params[:id])
-    if @user.update_attributes(params[:user])
+    continue = true
+    if params[:user][:old_password]
+      continue = @user.has_password?(params[:user][:old_password])
+      unless params[:user][:password]
+        params[:user][:password] = params[:user][:old_password]
+        params[:user][:password_confirmation] = params[:user][:old_password]
+      end
+    end
+    if continue && @user.update_attributes(params[:user])
       flash[:success] = "Profile updated"
       redirect_to @user
     else
@@ -79,6 +88,11 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @users = @user.followers.paginate(:page => params[:page])
     render 'show_follow'
+  end
+
+  def change_password
+    @user = current_user
+    @title = "Change Password"
   end
 
   private

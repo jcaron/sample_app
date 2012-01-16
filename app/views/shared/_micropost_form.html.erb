@@ -1,29 +1,10 @@
+<%= javascript_include_tag 'charCounter' %>
 <%= form_for @micropost do |f| %>
   <%= render 'shared/error_messages', :object => f.object %>
   <div class="field">
-    <%= f.text_area :content, :id => "mpfield" %>
+    <%= f.text_area :content %>
   </div>
   <div id="char_count">140 characters left</div>
-  <script type="text/javascript">
-    // just a function to pluralize the word "character" based on the number
-    function pluralize_characters(num) {
-      if(num == 1) {
-        return num + " character";
-      } else {
-        return num + " characters";
-      }
-    }
-
-    $("#mpfield").keyup(function() {
-      var chars = $("#mpfield").val().length;
-      var left = 140 - chars; 
-      if(left >= 0) {
-        $("#char_count").text(pluralize_characters(left) + " left");
-      } else {
-        $("#char_count").text(pluralize_characters(left) + " too long");
-      }
-    });
-  </script>
   <div class="actions">
     <%= f.submit "Submit" %>
   </div>
