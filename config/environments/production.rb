@@ -46,4 +46,8 @@ SampleApp::Application.configure do
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
+
+  config.action_mailer.default_url_options = { :host => "pure-winter-4806.heroku.com" }
+
+  config.action_mailer.perform_deliveries = true
 end

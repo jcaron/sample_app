@@ -1,4 +1,6 @@
 SampleApp::Application.routes.draw do
+  get "password_resets/new"
+
   get "sessions/new"
 
   resources :users do
@@ -9,6 +11,7 @@ SampleApp::Application.routes.draw do
   resources :sessions,		:only => [:new, :create, :destroy]
   resources :microposts,	:only => [:create, :destroy]
   resources :relationships,	:only => [:create, :destroy]
+  resources :password_resets
 
   match '/signup', :to => 'users#new'
   match '/users/:id/change_password', :to => 'users#change_password'
