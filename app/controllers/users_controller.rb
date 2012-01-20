@@ -44,12 +44,9 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     continue = true
-    if params[:user][:old_password]
+    if params[:user].has_key?(:old_password)
       continue = @user.has_password?(params[:user][:old_password])
-      unless params[:user][:password]
-        params[:user][:password] = params[:user][:old_password]
-        params[:user][:password_confirmation] = params[:user][:old_password]
-      end
+      @user.errors.add(:old_password, "is wrong.") if not continue
     end
     if continue && @user.update_attributes(params[:user])
       flash[:success] = "Profile updated"

@@ -2,7 +2,8 @@ require 'digest'
 
 class User < ActiveRecord::Base
   attr_accessor :password, :old_password
-  attr_accessible :name, :email, :password, :password_confirmation
+    attr_accessible :name, :email, :password, :password_confirmation,
+    :old_password
 
   has_many :microposts, :dependent => :destroy
   has_many :relationships,	:foreign_key => "follower_id",
@@ -15,14 +16,15 @@ class User < ActiveRecord::Base
 
   email_format = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
-  validates :name,	:presence => true,
-			:length => { :maximum => 50 }
-  validates :email,	:presence => true,
-			:format => { :with => email_format },
-			:uniqueness => { :case_sensitive => false }
+  validates :name,      :presence => true,
+                        :length => { :maximum => 50 }
+  validates :email,     :presence => true,
+                        :format => { :with => email_format },
+                        :uniqueness => { :case_sensitive => false }
   validates :password,	:presence => true, 
-			:confirmation => true, 
-			:length => { :within => 6..40 }
+                        :length => { :within => 6..40 },
+                        :confirmation => true, 
+                        :if => :password_required?
 
   before_save :encrypt_password
 
@@ -61,10 +63,27 @@ class User < ActiveRecord::Base
     self.relationships.find_by_followed_id(followed).destroy
   end
 
+  def generate_token(column)
+    begin
+      self[column] = SecureRandom.urlsafe_base64
+    end while User.exists?(column => self[column])
+  end
+
+  def send_password_reset
+    generate_token(:password_reset_token)
+    self.password_reset_sent_at = Time.zone.now
+    save!
+    UserMailer.password_reset(self).deliver
+  end
+
+  def password_required?
+    !self.password.nil? || self.new_record?
+  end
+
   private
     def encrypt_password
       self.salt = make_salt if new_record?
-      self.encrypted_password = encrypt(password)
+      self.encrypted_password = encrypt(password) if password
     end
 
     def encrypt(string)
@@ -79,7 +98,6 @@ class User < ActiveRecord::Base
       Digest::SHA2.hexdigest(string)
     end
 end
-
 # == Schema Information
 #
 # Table name: users
