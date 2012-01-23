@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Name:</b>
+  <%= @user_image.name %>
+</p>
+
+<p>
+  <b>Caption:</b>
+  <%= @user_image.caption %>
+</p>
+
+<p>
+  <b>Image:</b><br>
+  <%= link_to(image_tag(@user_image.image.url(:small)),  @user_image.image.url(:original)) %>
+</p>
+
+<%= link_to 'Edit', edit_user_image_path(@user_image) %> |
+<%= link_to 'Back', user_images_path %>

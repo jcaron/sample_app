@@ -1,0 +1,7 @@
+Hi, <%= @followed.name %>! 
+You have gained a new follower:
+<%= @follower.id %> - <%= @follower.name %>
+
+You can view their page at: <%= user_url(@follower) %>
+
+Don't like receiving these messages? Turn them off via your user settings page.

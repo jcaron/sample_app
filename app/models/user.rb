@@ -2,8 +2,8 @@ require 'digest'
 
 class User < ActiveRecord::Base
   attr_accessor :password, :old_password
-    attr_accessible :name, :email, :password, :password_confirmation,
-    :old_password
+  attr_accessible :name, :email, :password, :password_confirmation,
+    :old_password, :notify
 
   has_many :microposts, :dependent => :destroy
   has_many :relationships,	:foreign_key => "follower_id",
@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
 				   :class_name => "Relationship",
 				   :dependent => :destroy
   has_many :followers, :through => :reverse_relationships, :source => :follower
+  has_many :user_images, :dependent => :destroy
 
   email_format = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
@@ -56,7 +57,9 @@ class User < ActiveRecord::Base
   end
 
   def follow!(followed)
-    self.relationships.create!(:followed_id => followed.id)
+    unless self.following?(followed)
+      self.relationships.create!(:followed_id => followed.id)
+    end
   end
 
   def unfollow!(followed)

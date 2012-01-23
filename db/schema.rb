@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120116214410) do
+ActiveRecord::Schema.define(:version => 20120120203339) do
 
   create_table "microposts", :force => true do |t|
     t.string   "content"
@@ -31,6 +31,18 @@ ActiveRecord::Schema.define(:version => 20120116214410) do
   add_index "relationships", ["followed_id"], :name => "index_relationships_on_followed_id"
   add_index "relationships", ["follower_id"], :name => "index_relationships_on_follower_id"
 
+  create_table "user_images", :force => true do |t|
+    t.string   "name"
+    t.text     "caption"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "name"
     t.string   "email"
@@ -41,6 +53,7 @@ ActiveRecord::Schema.define(:version => 20120116214410) do
     t.boolean  "admin",                  :default => false
     t.string   "password_reset_token"
     t.datetime "password_reset_sent_at"
+    t.boolean  "notify",                 :default => true
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -10,6 +10,10 @@
     <%= f.label :email %><br>
     <%= f.text_field :email %>
   </div>
+  <div class="field">
+    <%= f.label :notify, "Recieve notifications by email?" %>
+    <%= f.check_box :notify, {}, true, false %>
+  </div>
   <div class="actions">
     <%= f.submit "Update" %>
   </div>
